@@ -29,8 +29,6 @@ func main() {
 			log.Printf("Unable to create connection pool: %v\n", err)
 		} else {
 			defer dbPool.Close()
-
-			// Verify connection
 			var version string
 			err = dbPool.QueryRow(context.Background(), "SELECT version()").Scan(&version)
 			if err != nil {
@@ -44,6 +42,7 @@ func main() {
 	// Initialize Gin
 	r := gin.Default()
 
+	// Define Routes
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Welcome to the BizNearly Backend!",
@@ -55,6 +54,10 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
+	})
+
+	r.GET("/favicon.ico", func(c *gin.Context) {
+		c.Status(http.StatusNoContent)
 	})
 
 	// Start Server
